@@ -28,7 +28,7 @@ CREATE TABLE vehicles (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `vehicle_type` VARCHAR(100) NOT NULL,
   `model` VARCHAR(255) NOT NULL,
-  `manufacture_date` DATE NOT NULL,
+  `manufacture_date` VARCHAR(255) NOT NULL,
   `vin_number` VARCHAR(255) UNIQUE NOT NULL,
   `exterior_color` VARCHAR(100) NOT NULL,
   `interior_color` VARCHAR(100) NOT NULL,
@@ -39,6 +39,7 @@ CREATE TABLE vehicles (
   `purchase_date` DATE NOT NULL,
   `purchase_team` VARCHAR(255) NOT NULL,
   `approved_by` varchar(255) NOT NULL,
+  `status` Enum('sent', 'not_sent') NOT NULL DEFAULT 'not_sent',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `buyer_id` INT NOT NULL,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -62,10 +63,10 @@ CREATE TABLE `salaries` (
 );
 
 CREATE TABLE `bonuses` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `employee_id` int NOT NULL,
-  `amount` decimal NOT NULL,
-  `bonus_date` date NOT NULL
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `employee_id` INT NOT NULL,
+  `vehicle_id` INT NOT NULL,
+  `bonus_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE `deductions` (
@@ -128,6 +129,8 @@ ALTER TABLE `vehicles` ADD FOREIGN KEY (`created_by`) REFERENCES `employees` (`i
 ALTER TABLE `salaries` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `bonuses` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
+
+ALTER TABLE `bonuses` ADD FOREIGN KEY (`vehicle_id`) REFERENCES `vehicles` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `deductions` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
 

@@ -139,6 +139,19 @@ class Vehicle {
     const [result] = await db.execute(sql, [this.id]);
     return result;
   }
+
+  async getVehicleWithBuyer() {
+    const sql = `
+       select v.*, 
+      e.first_name AS buyer_first_name, 
+      e.last_name AS buyer_last_name
+      FROM vehicles v
+      LEFT JOIN employees e ON v.buyer_id = e.id
+      WHERE v.id = ?
+    `;
+    const [rows] = await db.execute(sql, [this.id]);
+    return rows[0];
+  }
 }
 
 module.exports = Vehicle;
