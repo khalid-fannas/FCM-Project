@@ -10,15 +10,34 @@ const {
 } = require("../controllers/deductionController");
 
 const { validateFields } = require("../middlewares/validateFields");
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.post("/create", validateFields(["reason"]), addDeduction);
+router.post(
+  "/create",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(["reason"]),
+  addDeduction
+);
 
-router.patch("/update/:id", validateFields(["reason"]), updateDeduction);
+router.patch(
+  "/update/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(["reason"]),
+  updateDeduction
+);
 
-router.get("/all", getAllDeductions);
+router.get("/all", verifyToken, checkRoles("hr , admin"), getAllDeductions);
 
-router.get("/:id", getDeductionById);
+router.get("/:id", verifyToken, checkRoles("hr , admin"), getDeductionById);
 
-router.delete("/delete/:id", deleteDeduction);
+router.delete(
+  "/delete/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  deleteDeduction
+);
 
 module.exports = router;

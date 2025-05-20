@@ -10,15 +10,29 @@ const {
 } = require("../controllers/userController");
 
 const { validateFields } = require("../middlewares/validateFields");
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.post("/create", validateFields(["role"]), addUser);
+router.post(
+  "/create",
+  verifyToken,
+  checkRoles("admin"),
+  validateFields(["role"]),
+  addUser
+);
 
-router.get("/all", getAllUsers);
+router.get("/all", verifyToken, checkRoles("admin"), getAllUsers);
 
-router.get("/:id", getUserById);
+router.get("/:id", verifyToken, checkRoles("admin"), getUserById);
 
-router.patch("/update/:id", validateFields(["role"]), updateUser);
+router.patch(
+  "/update/:id",
+  verifyToken,
+  checkRoles("admin"),
+  validateFields(["role"]),
+  updateUser
+);
 
-router.delete("/delete/:id", deleteUser);
+router.delete("/delete/:id", verifyToken, checkRoles("admin"), deleteUser);
 
 module.exports = router;

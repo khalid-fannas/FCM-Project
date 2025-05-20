@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+var cookieParser = require("cookie-parser");
 
 const app = express();
 const port = process.env.PORT;
@@ -15,11 +16,13 @@ const violationRoutes = require("./routes/violationRoutes");
 const violationsEmployeeRecordRoutes = require("./routes/violationsEmployeeRecordRoutes");
 const lateEntryRoutes = require("./routes/lateEntryRoutes");
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/api/employee", employeeRouter);
 
@@ -42,6 +45,8 @@ app.use("/api/violationsRecord", violationsEmployeeRecordRoutes);
 app.use("/api/lateEntry", lateEntryRoutes);
 
 app.use("/api/user", userRoutes);
+
+app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

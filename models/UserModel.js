@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 class User {
-  constructor(id = null, employee_id, work_email, password, role) {
+  constructor({ id = null, employee_id, work_email, password, role }) {
     this.id = id;
     this.employee_id = employee_id;
     this.work_email = work_email;
@@ -75,6 +75,18 @@ class User {
 
     const sql = `UPDATE users SET ${keys.join(", ")} WHERE id = ?`;
     const [result] = await db.execute(sql, values);
+    return result;
+  }
+
+  async getByEmail() {
+    const sql = `SELECT * FROM users WHERE work_email = ?`;
+    const [rows] = await db.execute(sql, [this.work_email]);
+    return rows[0];
+  }
+
+  async updatePasswordAndFlag() {
+    const sql = `UPDATE users SET password = ?, first_login = false WHERE id = ?`;
+    const [result] = await db.execute(sql, [this.password, this.id]);
     return result;
   }
 

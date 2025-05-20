@@ -12,14 +12,34 @@ const {
   deleteShift,
 } = require("../controllers/shiftsController.js");
 
-router.get("/all", getAllShifts);
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.get("/:id", getShiftById);
+router.get("/all", verifyToken, checkRoles("hr , admin"), getAllShifts);
 
-router.post("/create", validateFields(), addShift);
+router.get("/:id", verifyToken, checkRoles("hr , admin"), getShiftById);
 
-router.patch("/update/:id", validateFields(), updateShift);
+router.post(
+  "/create",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  addShift
+);
 
-router.delete("/delete/:id", deleteShift);
+router.patch(
+  "/update/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  updateShift
+);
+
+router.delete(
+  "/delete/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  deleteShift
+);
 
 module.exports = router;

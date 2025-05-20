@@ -139,7 +139,7 @@ const generateVehiclePdf = async (req, res) => {
     const userPdfBase64 = Buffer.from(userFile.buffer).toString("base64");
 
     const msg = {
-      to: "mafannas@gmail.com",
+      to: "kha2000.khaled@gmail.com",
       from: "ahfannas@gmail.com",
       subject: `Purchase Order VIN#  ${vehicleData.vin_number}`,
       text: `Dears,\n\nHope this email finds you well, please find the attached files and proceed.\n\nBest regards`,

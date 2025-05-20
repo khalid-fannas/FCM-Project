@@ -79,7 +79,7 @@ module.exports = function (car) {
           }</div>
           <div class="item"><span class="label">Purchased By:</span> ${
             car.buyer_first_name
-          }</div>
+          } ${car.buyer_last_name}</div>
           <div class="item"><span class="label">Purchase Team:</span> ${
             car.purchase_team
           }</div>

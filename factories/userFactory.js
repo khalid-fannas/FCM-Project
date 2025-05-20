@@ -1,13 +1,13 @@
 const User = require("../models/UserModel");
 
 function createUserFromData(userData, id = null) {
-  return new User(
+  return new User({
     id,
-    userData.employee_id,
-    userData.work_email,
-    userData.password,
-    userData.role
-  );
+    employee_id: userData.employee_id,
+    work_email: userData.work_email,
+    password: userData.password,
+    role: userData.role,
+  });
 }
 
 module.exports = { createUserFromData };

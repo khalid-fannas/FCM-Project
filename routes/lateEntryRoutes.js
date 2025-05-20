@@ -10,23 +10,34 @@ const {
 } = require("../controllers/lateEntryController");
 
 const { validateFields } = require("../middlewares/validateFields");
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
 router.post(
   "/create",
+  verifyToken,
+  checkRoles("hr , admin"),
   validateFields(["excuse", "updated_by", "reason"]),
   addLateEntry
 );
 
 router.patch(
   "/update/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
   validateFields(["excuse", "updated_by", "reason"]),
   updateLateEntry
 );
 
-router.get("/all", getAllLateEntries);
+router.get("/all", verifyToken, checkRoles("hr , admin"), getAllLateEntries);
 
-router.get("/:id", getLateEntryById);
+router.get("/:id", verifyToken, checkRoles("hr , admin"), getLateEntryById);
 
-router.delete("/delete/:id", deleteLateEntry);
+router.delete(
+  "/delete/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  deleteLateEntry
+);
 
 module.exports = router;

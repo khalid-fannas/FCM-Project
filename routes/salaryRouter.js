@@ -11,15 +11,34 @@ const {
   getSalaryById,
   deleteSalary,
 } = require("../controllers/salaryController.js");
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.get("/all", getAllSalaries);
+router.get("/all", verifyToken, checkRoles("hr , admin"), getAllSalaries);
 
-router.get("/:id", getSalaryById);
+router.get("/:id", verifyToken, checkRoles("hr , admin"), getSalaryById);
 
-router.post("/create", validateFields(), addSalary);
+router.post(
+  "/create",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  addSalary
+);
 
-router.patch("/update/:id", validateFields(), updateSalary);
+router.patch(
+  "/update/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  updateSalary
+);
 
-router.delete("/delete/:id", deleteSalary);
+router.delete(
+  "/delete/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  deleteSalary
+);
 
 module.exports = router;

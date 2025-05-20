@@ -1,21 +1,36 @@
 const User = require("../models/UserModel");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const { createUserFromData } = require("../factories/userFactory");
 const { handleControllerError } = require("../utils/controllerErrorHandler");
 
 const addUser = async (req, res) => {
   try {
     const userData = req.body;
-    const user = createUserFromData(userData);
+
+    const rawPassword = crypto.randomBytes(6).toString("base64").slice(0, 10);
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(rawPassword, salt);
+
+    const user = new User({
+      employee_id: userData.employee_id,
+      work_email: userData.work_email,
+      password: hashedPassword,
+      role: userData.role,
+    });
 
     const existingUser = await user.checkEmail();
     if (existingUser) {
       return res.status(400).json({ error: "Email already exists" });
     }
+
     const result = await user.create();
 
     res.status(201).json({
       message: "User created successfully",
       userId: result.insertId,
+      temporaryPassword: rawPassword,
     });
   } catch (err) {
     handleControllerError(err, res);
@@ -24,7 +39,7 @@ const addUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const user = new User();
+    const user = new User({});
     const users = await user.getAll();
 
     if (users.length === 0) {
@@ -40,7 +55,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    const user = new User(id);
+    const user = new User({ id });
     const userData = await user.getById();
 
     if (!userData) {
@@ -57,6 +72,18 @@ const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
     const userData = req.body;
+
+    if (userData.password && req.user.id !== parseInt(id)) {
+      return res.status(403).json({
+        error: "You are not allowed to change another user's password",
+      });
+    }
+
+    if (userData.password && req.user.id === parseInt(id)) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userData.password, salt);
+      userData.password = hashedPassword;
+    }
 
     const user = createUserFromData(userData, id);
     const existingUser = await user.getById();
@@ -80,7 +107,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const id = req.params.id;
-    const user = new User(id);
+    const user = new User({ id });
     const existingUser = await user.getById();
 
     if (!existingUser) {

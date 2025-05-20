@@ -118,7 +118,7 @@ CREATE TABLE `late_entries` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE `users` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
+ALTER TABLE `users` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `employees` ADD FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`);
 

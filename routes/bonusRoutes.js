@@ -10,15 +10,41 @@ const {
   getBonusById,
   deleteBonus,
 } = require("../controllers/bonusController");
+const { verifyToken } = require("../middlewares/authMiddleware.js");
+const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.get("/all", getAllBonuses);
+router.get(
+  "/all",
+  verifyToken,
+  checkRoles("hr , admin"),
+  verifyToken,
+  checkRoles("hr , admin"),
+  getAllBonuses
+);
 
-router.get("/:id", getBonusById);
+router.get("/:id", verifyToken, checkRoles("hr , admin"), getBonusById);
 
-router.post("/create", validateFields(), addBonus);
+router.post(
+  "/create",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  addBonus
+);
 
-router.patch("/update/:id", validateFields(), updateBonus);
+router.patch(
+  "/update/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  validateFields(),
+  updateBonus
+);
 
-router.delete("/delete/:id", deleteBonus);
+router.delete(
+  "/delete/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  deleteBonus
+);
 
 module.exports = router;
