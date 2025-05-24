@@ -1,14 +1,34 @@
 const LateEntry = require("../models/LateEntriesModel.js");
 const { createLateEntryFromData } = require("../factories/lateEntryFactory");
 const { handleControllerError } = require("../utils/controllerErrorHandler.js");
+const {
+  createViolationRecordFromData,
+} = require("../factories/violationsEmployeeRecordFactory");
 
 const addLateEntry = async (req, res) => {
   try {
     const entryData = req.body;
-    console.log(entryData);
     const lateEntry = createLateEntryFromData(entryData);
-    console.log(lateEntry);
+
     const result = await lateEntry.create();
+
+    const unlinkedLates = await LateEntry.getUnlinkedLateEntries(
+      entryData.employee_id
+    );
+
+    if (unlinkedLates.length === 2) {
+      const violationRecord = createViolationRecordFromData({
+        reported_by: entryData.created_by,
+        offender_id: entryData.employee_id,
+        violation_id: 19,
+        reason: "2 rejected late entries in the last 30 days",
+        reason_type: "lateness",
+      });
+      await violationRecord.create();
+
+      const lateIds = unlinkedLates.map((row) => row.id);
+      await LateEntry.markAsLinked(lateIds);
+    }
 
     res.status(201).json({
       message: "Late entry record created successfully",

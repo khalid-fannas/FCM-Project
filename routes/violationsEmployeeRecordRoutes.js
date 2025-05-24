@@ -7,6 +7,7 @@ const {
   getAllViolationRecords,
   getViolationRecordById,
   deleteViolationRecord,
+  getEmployeeStatus,
 } = require("../controllers/violationsEmployeeRecordController");
 
 const { validateFields } = require("../middlewares/validateFields");
@@ -48,6 +49,13 @@ router.delete(
   verifyToken,
   checkRoles("hr , admin"),
   deleteViolationRecord
+);
+
+router.get(
+  "/employeeStatus/:id",
+  verifyToken,
+  checkRoles("hr , admin"),
+  getEmployeeStatus
 );
 
 module.exports = router;

@@ -101,6 +101,29 @@ class LateEntry {
     const [result] = await db.execute(sql, [this.id]);
     return result;
   }
+
+  static async getUnlinkedLateEntries(employeeId) {
+    const [rows] = await db.execute(
+      `SELECT id FROM late_entries
+     WHERE employee_id = ?
+       AND excuse = 'rejected'
+       AND violation_linked = FALSE
+       AND date >= CURDATE() - INTERVAL 30 DAY
+     ORDER BY date ASC
+     LIMIT 2`,
+      [employeeId]
+    );
+    return rows;
+  }
+
+  static async markAsLinked(lateEntryIds) {
+    if (lateEntryIds.length === 0) return;
+    const placeholders = lateEntryIds.map(() => "?").join(",");
+    await db.execute(
+      `UPDATE late_entries SET violation_linked = TRUE WHERE id IN (${placeholders})`,
+      lateEntryIds
+    );
+  }
 }
 
 module.exports = LateEntry;

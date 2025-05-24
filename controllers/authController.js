@@ -134,8 +134,18 @@ const refreshToken = (req, res) => {
   }
 };
 
+const logOut = (req, res) => {
+  res.clearCookie("refresh_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
 module.exports = {
   logIn,
   setNewPassword,
   refreshToken,
+  logOut,
 };

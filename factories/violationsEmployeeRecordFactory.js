@@ -10,7 +10,8 @@ function createViolationRecordFromData(data, id = null) {
       ? data.reason === "" || data.reason === null
         ? null
         : data.reason
-      : undefined
+      : undefined,
+    data.reason_type || "manual"
   );
 }
 

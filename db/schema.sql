@@ -102,7 +102,8 @@ CREATE TABLE `violations_employees_record` (
   `reported_by` int NOT NULL,
   `offender_id` int NOT NULL,
   `violation_id` int NOT NULL,
-  `reason` text
+  `reason` text,
+  `reason_type` ENUM('lateness', 'manual', 'other') DEFAULT 'manual'
 );
 
 CREATE TABLE `late_entries` (
@@ -113,6 +114,7 @@ CREATE TABLE `late_entries` (
   `reason` text,
   `excuse` Enum('approved','rejected') default 'rejected',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `violation_linked` BOOLEAN DEFAULT FALSE,
   `created_by` int NOT NULL,
   `updated_by` int,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -153,3 +155,14 @@ ALTER TABLE `late_entries` ADD FOREIGN KEY (`employee_id`) REFERENCES `employees
 ALTER TABLE `late_entries` ADD FOREIGN KEY (`created_by`) REFERENCES `employees` (`id`);
 
 ALTER TABLE `late_entries` ADD FOREIGN KEY (`updated_by`) REFERENCES `employees` (`id`);
+
+ALTER TABLE violations ADD COLUMN weight FLOAT GENERATED ALWAYS AS (
+  CASE 
+    WHEN type = 'verbal_warning' THEN 0.5
+    WHEN type = 'first_warning' THEN 1
+    WHEN type = 'final_warning' THEN 2
+    WHEN type = 'termination' THEN 99
+    ELSE NULL
+  END
+) STORED;
+
