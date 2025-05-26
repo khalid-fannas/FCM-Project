@@ -16,7 +16,7 @@ const { checkRoles } = require("../middlewares/authorizeRoles.js");
 router.post(
   "/create",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(["excuse", "updated_by", "reason"]),
   addLateEntry
 );
@@ -24,19 +24,19 @@ router.post(
 router.patch(
   "/update/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(["excuse", "updated_by", "reason"]),
   updateLateEntry
 );
 
-router.get("/all", verifyToken, checkRoles("hr , admin"), getAllLateEntries);
+router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllLateEntries);
 
-router.get("/:id", verifyToken, checkRoles("hr , admin"), getLateEntryById);
+router.get("/:id", verifyToken, checkRoles("hr", "admin"), getLateEntryById);
 
 router.delete(
   "/delete/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   deleteLateEntry
 );
 

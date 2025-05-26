@@ -21,6 +21,10 @@ router.post(
   addUser
 );
 
+router.get("/management", verifyToken, checkRoles("admin"), (req, res) => {
+  res.render("users");
+});
+
 router.get("/all", verifyToken, checkRoles("admin"), getAllUsers);
 
 router.get("/:id", verifyToken, checkRoles("admin"), getUserById);

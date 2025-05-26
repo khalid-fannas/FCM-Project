@@ -14,14 +14,14 @@ const {
 const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.get("/all", verifyToken, checkRoles("hr , admin"), getAllSalaries);
+router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllSalaries);
 
-router.get("/:id", verifyToken, checkRoles("hr , admin"), getSalaryById);
+router.get("/:id", verifyToken, checkRoles("hr", "admin"), getSalaryById);
 
 router.post(
   "/create",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(),
   addSalary
 );
@@ -29,7 +29,7 @@ router.post(
 router.patch(
   "/update/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(),
   updateSalary
 );
@@ -37,7 +37,7 @@ router.patch(
 router.delete(
   "/delete/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   deleteSalary
 );
 

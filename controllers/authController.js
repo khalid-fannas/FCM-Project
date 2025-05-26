@@ -13,12 +13,12 @@ const logIn = async (req, res) => {
 
     const userData = await user.getByEmail();
     if (!userData) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, userData.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(404).json({ message: "Invalid email or password" });
     }
 
     if (userData.first_login) {
@@ -38,16 +38,13 @@ const logIn = async (req, res) => {
         sameSite: "Strict",
       });
 
-      return res.status(200).json({
-        message: "First login - password reset required",
-        requirePasswordReset: true,
-      });
+      return res.json({ redirect: "/api/auth/setPassword" });
     }
 
     const accessToken = jwt.sign(
       { id: userData.id, role: userData.role },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" }
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
@@ -56,6 +53,13 @@ const logIn = async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -63,11 +67,7 @@ const logIn = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
-      message: "Login successful",
-      accessToken,
-      userId: userData.id,
-    });
+    res.redirect("/dashboard");
   } catch (err) {
     handleControllerError(err, res);
   }
@@ -76,12 +76,16 @@ const logIn = async (req, res) => {
 const setNewPassword = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { newPassword } = req.body;
+    const { newPassword, confirmPassword } = req.body;
 
     if (!newPassword || newPassword.trim().length < 6) {
       return res
         .status(400)
-        .json({ error: "Password must be at least 6 characters long" });
+        .json({ message: "Password must be at least 6 characters long" });
+    }
+
+    if (!confirmPassword || newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -92,19 +96,44 @@ const setNewPassword = async (req, res) => {
       password: hashedPassword,
       first_login: false,
     });
+
     const updateResult = await user.updatePasswordAndFlag();
 
     if (updateResult.affectedRows === 0) {
       return res
         .status(404)
-        .json({ error: "User not found or password not updated" });
+        .json({ message: "User not found or password not updated" });
     }
+
+    const accessToken = jwt.sign(
+      { id: userId, role: req.user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: userId, role: req.user.role },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.clearCookie("reset_token");
 
-    res
-      .status(200)
-      .json({ message: "Password updated successfully. You can now log in." });
+    return res.json({ redirect: "/dashboard" });
   } catch (err) {
     handleControllerError(err, res);
   }
@@ -120,13 +149,20 @@ const refreshToken = (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
-    const accessToken = jwt.sign(
+    const newAccessToken = jwt.sign(
       { id: decoded.id, role: decoded.role },
       process.env.JWT_SECRET,
-      { expiresIn: "15min" }
+      { expiresIn: "15m" }
     );
 
-    return res.status(200).json({ accessToken });
+    res.cookie("access_token", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "Access token refreshed" });
   } catch (err) {
     return res
       .status(403)
@@ -135,12 +171,19 @@ const refreshToken = (req, res) => {
 };
 
 const logOut = (req, res) => {
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+
   res.clearCookie("refresh_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "Strict",
   });
-  res.status(200).json({ message: "Logged out successfully" });
+
+  res.redirect("/api/auth/login");
 };
 
 module.exports = {

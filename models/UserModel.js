@@ -95,6 +95,17 @@ class User {
     const [result] = await db.execute(sql, [this.id]);
     return result;
   }
+
+  static async getUserFullName(userId) {
+    const sql = `
+        SELECT CONCAT(e.first_name, ' ', e.last_name) AS full_name
+        FROM users u
+        JOIN employees e ON u.employee_id = e.id
+        WHERE u.id = ?
+      `;
+    const [rows] = await db.execute(sql, [userId]);
+    return rows[0] ? rows[0].full_name : null;
+  }
 }
 
 module.exports = User;

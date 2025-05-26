@@ -16,7 +16,7 @@ const { checkRoles } = require("../middlewares/authorizeRoles.js");
 router.post(
   "/create",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(["check_in", "check_out"]),
   addAttendance
 );
@@ -24,19 +24,19 @@ router.post(
 router.patch(
   "/update/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(["check_in", "check_out"]),
   updateAttendance
 );
 
-router.get("/all", verifyToken, checkRoles("hr , admin"), getAllAttendances);
+router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllAttendances);
 
-router.get("/:id", verifyToken, checkRoles("hr , admin"), getAttendanceById);
+router.get("/:id", verifyToken, checkRoles("hr", "admin"), getAttendanceById);
 
 router.delete(
   "/delete/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   deleteAttendance
 );
 

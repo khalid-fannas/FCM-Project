@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { createUserFromData } = require("../factories/userFactory");
 const { handleControllerError } = require("../utils/controllerErrorHandler");
+const dotenv = require("dotenv");
+dotenv.config({ path: require("path").join(__dirname, "../.env") });
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const addUser = async (req, res) => {
   try {
@@ -27,8 +31,23 @@ const addUser = async (req, res) => {
 
     const result = await user.create();
 
+    if (!result || result.affectedRows === 0) {
+      return res.status(500).json({ error: "Failed to create user" });
+    }
+
+    const getUserFullName = await User.getUserFullName(result.insertId);
+
+    const msg = {
+      to: "kha2000.khaled@gmail.com",
+      from: "ahfannas@gmail.com",
+      subject: "Your New Account Credentials",
+      text: `Dear ${getUserFullName},\n\nYour account has been created successfully. Here are your login details:\n\nEmail: ${userData.work_email}\nTemporary Password: ${rawPassword}\n\nPlease log in and change your password as soon as possible.\n\nBest regards,\nHR Team`,
+    };
+
+    await sgMail.send(msg);
+
     res.status(201).json({
-      message: "User created successfully",
+      message: "User created successfully and email sent with temp Password",
       userId: result.insertId,
       temporaryPassword: rawPassword,
     });

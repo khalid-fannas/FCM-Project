@@ -1,0 +1,27 @@
+.toast {
+  background: #333;
+  color: white;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  min-width: 200px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.toast.success {
+  background: #4caf50;
+}
+
+.toast.error {
+  background: #f44336;
+}
+
+.toast.info {
+  background: #2196f3;
+}
+
+.toast.fade-out {
+  opacity: 0;
+  transform: translateX(50%);
+}

@@ -15,14 +15,14 @@ const {
 const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
-router.get("/all", verifyToken, checkRoles("hr , admin"), getAllShifts);
+router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllShifts);
 
-router.get("/:id", verifyToken, checkRoles("hr , admin"), getShiftById);
+router.get("/:id", verifyToken, checkRoles("hr", "admin"), getShiftById);
 
 router.post(
   "/create",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(),
   addShift
 );
@@ -30,7 +30,7 @@ router.post(
 router.patch(
   "/update/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   validateFields(),
   updateShift
 );
@@ -38,7 +38,7 @@ router.patch(
 router.delete(
   "/delete/:id",
   verifyToken,
-  checkRoles("hr , admin"),
+  checkRoles("hr", "admin"),
   deleteShift
 );
 

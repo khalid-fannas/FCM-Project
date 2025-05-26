@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+<body class="text-gray-800 dark:text-gray-100">
+
+  <div class="flex h-screen">
+    <div class="w-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col justify-between">
+      <div>
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white">FCM System</h1>
+        </div>
+
+        <nav class="mt-4 space-y-1 px-2">
+          <a href="/dashboard" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-chart-line w-5 mr-3 text-gray-700 dark:text-white"></i> Dashboard
+          </a>
+          <a href="/api/user/management" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-users w-5 mr-3 text-gray-700 dark:text-white"></i> Users
+          </a>
+          <a href="/employees" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-user-tie w-5 mr-3 text-gray-700 dark:text-white"></i> Employees
+          </a>
+          <a href="/vehicles" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-car w-5 mr-3 text-gray-700 dark:text-white"></i> Vehicles
+          </a>
+          <a href="/salary" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-coins w-5 mr-3 text-gray-700 dark:text-white"></i> Salary
+          </a>
+          <a href="/attendance" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-clock w-5 mr-3 text-gray-700 dark:text-white"></i> Attendance
+          </a>
+          <a href="/violations" class="flex items-center px-4 py-3 sidebar-link rounded transition hover:bg-gray-300 dark:hover:bg-gray-700">
+            <i class="fas fa-exclamation-triangle w-5 mr-3 text-gray-700 dark:text-white"></i> Violations
+          </a>
+        </nav>
+      </div>
+
+      <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+        <a href="/api/auth/logout" class="flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const currentPath = window.location.pathname;
+      const links = document.querySelectorAll('.sidebar-link');
+  
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath) {
+          link.classList.add('bg-gray-200', 'dark:bg-gray-800', 'font-semibold');
+        } else {
+          link.classList.remove('bg-gray-200', 'dark:bg-gray-800', 'font-semibold');
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>
