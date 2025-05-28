@@ -56,10 +56,7 @@ CREATE TABLE `shifts` (
 CREATE TABLE `salaries` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `employee_id` int NOT NULL,
-  `base_salary` decimal NOT NULL,
-  `total_bonuses` decimal NOT NULL,
-  `total_deductions` decimal NOT NULL,
-  `payment_date` date NOT NULL
+  `base_salary` decimal NOT NULL
 );
 
 CREATE TABLE `bonuses` (

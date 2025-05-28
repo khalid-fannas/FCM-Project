@@ -8,12 +8,10 @@ function createEmployeeFromData(employeeData, id = null) {
     employeeData.email,
     employeeData.phone_number,
     employeeData.address,
-    employeeData.personal_picture,
     employeeData.department_name,
     employeeData.position_name,
     employeeData.shift_id,
     employeeData.hire_date,
-    employeeData.salary_base,
     employeeData.status
   );
 }

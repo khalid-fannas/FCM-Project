@@ -9,6 +9,7 @@ const {
   getAllBonuses,
   getBonusById,
   deleteBonus,
+  getEmployeeBonus,
 } = require("../controllers/bonusController");
 const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
@@ -16,6 +17,13 @@ const { checkRoles } = require("../middlewares/authorizeRoles.js");
 router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllBonuses);
 
 router.get("/:id", verifyToken, checkRoles("hr", "admin"), getBonusById);
+
+router.get(
+  "/employee/:id",
+  verifyToken,
+  checkRoles("hr", "admin"),
+  getEmployeeBonus
+);
 
 router.post(
   "/create",

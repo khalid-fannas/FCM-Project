@@ -19,6 +19,15 @@ const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
 router.get(
+  "/management",
+  verifyToken,
+  checkRoles("data_entry", "admin"),
+  (req, res) => {
+    res.render("vehicle");
+  }
+);
+
+router.get(
   "/all",
   verifyToken,
   checkRoles("data_entry", "admin"),
@@ -36,7 +45,7 @@ router.post(
   "/create",
   verifyToken,
   checkRoles("data_entry", "admin"),
-  validateFields(),
+  validateFields(["created_by"]),
   addVehicle
 );
 
@@ -44,7 +53,7 @@ router.patch(
   "/update/:id",
   verifyToken,
   checkRoles("data_entry", "admin"),
-  validateFields(),
+  validateFields(["created_by"]),
   updateVehicle
 );
 

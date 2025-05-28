@@ -22,11 +22,6 @@ const getAllSalaries = async (req, res) => {
   try {
     const salary = new Salary();
     const allSalaries = await salary.getAll();
-
-    if (allSalaries.length === 0) {
-      return res.status(404).json({ message: "No salary records found" });
-    }
-
     res.status(200).json(allSalaries);
   } catch (err) {
     handleControllerError(err, res);

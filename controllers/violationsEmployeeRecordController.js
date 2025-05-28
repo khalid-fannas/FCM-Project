@@ -5,6 +5,9 @@ const {
 const { handleControllerError } = require("../utils/controllerErrorHandler");
 const Employee = require("../models/EmployeeModel.js");
 const { notifyIfStatusChanged } = require("../utils/violationEmails.js");
+const {
+  validateActiveEmployee,
+} = require("../helper/employeeStatusChecker.js");
 
 const addViolationRecord = async (req, res) => {
   try {
@@ -12,6 +15,8 @@ const addViolationRecord = async (req, res) => {
     const record = createViolationRecordFromData(data);
 
     const employeeId = data.offender_id;
+
+    await validateActiveEmployee(employeeId);
 
     const previousWeight =
       await ViolationsEmployeeRecord.getEmployeeTotalViolationWeight(
@@ -39,10 +44,6 @@ const getAllViolationRecords = async (req, res) => {
   try {
     const record = new ViolationsEmployeeRecord();
     const records = await record.getAll();
-
-    if (records.length === 0) {
-      return res.status(404).json({ message: "No violation records found" });
-    }
 
     res.status(200).json(records);
   } catch (err) {

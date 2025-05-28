@@ -1,11 +1,10 @@
 const db = require("../config/db");
 
 class Bonus {
-  constructor(id = null, employee_id, amount, bonus_date) {
+  constructor(id = null, employee_id = null, vehicle_id = null) {
     this.id = id;
     this.employee_id = employee_id;
-    this.amount = amount;
-    this.bonus_date = bonus_date;
+    this.vehicle_id = vehicle_id;
   }
 
   async getAll() {
@@ -21,11 +20,17 @@ class Bonus {
   }
 
   async create() {
+    if (!this.employee_id || !this.vehicle_id) {
+      throw new Error(
+        "employee_id and vehicle_id must be provided from vehicle logic"
+      );
+    }
+
     const sql = `
-      INSERT INTO bonuses (employee_id, amount, bonus_date)
-      VALUES (?, ?, ?)
+      INSERT INTO bonuses (employee_id, vehicle_id)
+      VALUES (?, ?)
     `;
-    const values = [this.employee_id, this.amount, this.bonus_date];
+    const values = [this.employee_id, this.vehicle_id];
 
     for (const value of values) {
       if (value === undefined) {
@@ -39,9 +44,7 @@ class Bonus {
 
   async update() {
     const updatableFields = {
-      employee_id: this.employee_id,
       amount: this.amount,
-      bonus_date: this.bonus_date,
     };
 
     const keys = [];
@@ -73,6 +76,21 @@ class Bonus {
     const sql = `DELETE FROM bonuses WHERE id = ?`;
     const [result] = await db.execute(sql, [this.id]);
     return result;
+  }
+
+  async getMonthlyBonusForEmployee(id) {
+    const sql = `
+    SELECT 
+      COUNT(*) * 20 AS total_bonus
+    FROM bonuses
+    WHERE 
+      employee_id = ?
+      AND MONTH(bonus_date) = MONTH(CURRENT_DATE())
+      AND YEAR(bonus_date) = YEAR(CURRENT_DATE())
+  `;
+
+    const [rows] = await db.execute(sql, [id]);
+    return rows[0]?.total_bonus || 0;
   }
 }
 

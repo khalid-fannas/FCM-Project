@@ -28,14 +28,23 @@ const getAllEmployees = async (req, res) => {
 
     const allEmployees = await employee.getall();
 
-    if (allEmployees.length === 0) {
-      return res.status(404).json({ message: "No employees found" });
-    }
     res.status(200).json(allEmployees);
   } catch (err) {
     handleControllerError(err, res);
   }
 };
+
+const getAllActiveEmployees = async (req, res) => {
+  try {
+    const employee = new Employee();
+
+    const allEmployees = await employee.getallActiveEmployees();
+    res.status(200).json(allEmployees);
+  } catch (err) {
+    handleControllerError(err, res);
+  }
+};
+
 const getEmployeeById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -91,7 +100,7 @@ const deleteEmployee = async (req, res) => {
 
     const result = await employee.delete();
     res.status(200).json({
-      message: "Employee deleted successfully",
+      message: "Employee now is InActive",
       affectedRows: result.affectedRows,
     });
   } catch (err) {
@@ -105,4 +114,5 @@ module.exports = {
   getAllEmployees,
   getEmployeeById,
   deleteEmployee,
+  getAllActiveEmployees,
 };

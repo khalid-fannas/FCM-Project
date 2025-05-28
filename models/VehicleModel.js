@@ -38,7 +38,14 @@ class Vehicle {
   }
 
   async getAll() {
-    const sql = `SELECT * FROM vehicles`;
+    const sql = `
+    SELECT v.*, 
+           e.first_name AS buyer_first_name, 
+           e.last_name AS buyer_last_name
+    FROM vehicles v
+    LEFT JOIN employees e ON v.buyer_id = e.id
+    ORDER BY v.created_at DESC
+  `;
     const [rows] = await db.execute(sql);
     return rows;
   }
@@ -151,6 +158,12 @@ class Vehicle {
     `;
     const [rows] = await db.execute(sql, [this.id]);
     return rows[0];
+  }
+
+  async updateStatus(newStatus) {
+    const sql = `UPDATE vehicles SET status = ? WHERE id = ?`;
+    const [result] = await db.execute(sql, [newStatus, this.id]);
+    return result;
   }
 }
 

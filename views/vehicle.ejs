@@ -1,0 +1,167 @@
+<%- include('partials/header') %>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100" x-data="LightingMode()" x-init="init()" x-cloak>
+  <div class="flex min-h-screen">
+    <div class="w-64">
+      <%- include('partials/sidebar') %>
+    </div>
+
+    <main class="flex-1 p-6 h-screen overflow-y-auto w-full mx-auto hide-scrollbar">
+      <div class="flex w-[92%] justify-between items-center mb-6">
+        <h1 class="text-2xl font-extrabold text-gray-600 dark:text-gray-100 tracking-tight">
+          Vehicles
+        </h1>
+        <button
+          id="addVehicleBtn"
+          class="addBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Add Vehicle
+        </button>
+      </div>
+      <div id="vehicles-cards-container" class="flex flex-col gap-6">
+      </div>
+    </main>
+  </div>
+
+    <div id="vehicleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full max-w-5xl p-8 mx-4 sm:mx-0">
+        <div id="modalMessage" class="mb-6 text-sm text-red-600 dark:text-red-400"></div>
+        <h2 id="titleVehicleModal" class="text-xl font-bold text-start text-gray-800 dark:text-white pb-4">Vehicle Moadl</h2>
+
+        <form id="vehicleForm" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <label for="vehicle_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Vehicle Type</label>
+            <input type="text" name="vehicle_type" id="vehicle_type" placeholder="Vehicle Type" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="model" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Model</label>
+            <input type="text" name="model" id="model" placeholder="Model" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="manufacture_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Manufacture Date</label>
+            <input type="text" name="manufacture_date" id="manufacture_date" placeholder="Manufacture Date" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="vin_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">VIN Number</label>
+            <input type="text" name="vin_number" id="vin_number" placeholder="VIN Number" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="exterior_color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exterior Color</label>
+            <input type="text" name="exterior_color" id="exterior_color" placeholder="Exterior Color" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="interior_color" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Interior Color</label>
+            <input type="text" name="interior_color" id="interior_color" placeholder="Interior Color" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="mileage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mileage</label>
+            <input type="number" name="mileage" id="mileage" placeholder="Mileage" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="purchase_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Purchase Price</label>
+            <input type="number" name="purchase_price" id="purchase_price" placeholder="Purchase Price" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="market_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Market Price</label>
+            <input type="number" name="market_price" id="market_price" placeholder="Market Price" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="purchased_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Purchased From</label>
+            <input type="text" name="purchased_from" id="purchased_from" placeholder="Purchased From" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="purchase_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Purchase Date</label>
+            <input type="date" name="purchase_date" id="purchase_date" placeholder="Purchase Date" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="purchase_team" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Purchase Team</label>
+            <input type="text" name="purchase_team" id="purchase_team" placeholder="Purchase Team" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="approved_by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Approved By</label>
+            <input type="text" name="approved_by" id="approved_by" placeholder="Approved By" class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required />
+          </div>
+        
+          <div>
+            <label for="buyer_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Buyer</label>
+            <select name="buyer_id" id="buyer_id"  class="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-500" required ></select>
+          </div>
+        
+          <div class="sm:col-span-2 flex justify-end gap-4 pt-4">
+            <button type="button" id="cancelModal" class="cancelBtn flex items-center">
+              <i class="fas fa-times mr-2 pointer-events-none"></i> Cancel
+            </button>
+            <button type="submit" class="submitBtn flex items-center">
+              <i class="fas fa-paper-plane mr-2 pointer-events-none"></i> Submit
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+
+    <div id="emailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-2xl p-6 pr-10 text-center relative">
+    
+        <button id="closeModalBtn"
+          class="absolute top-0 right-2 text-gray-600 dark:text-gray-200 dark:hover:text-red-600 hover:text-red-600 text-3xl font-bold">
+          &times;
+        </button>
+    
+        <div class="flex w-full realtive justify-start items-center pt-4">
+          <p class="absolute text-red-700 dark:text-white left-6 top-3 font-bold">
+            <i class="fas fa-file-pdf text-xl mr-1"></i> Just PDF File
+          </p>
+          <div class="flex gap-2 items-center w-full">
+            <input type="file" id="pdfUpload" class="border w-full p-3 rounded-l-lg bg-white dark:bg-gray-200 border-sky-200 shadow-2xl text-sky-700">
+          </div>
+          <button
+            id="confirmSendEmail"
+            class="min-w-40 px-4 py-3 border rounded-r-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 transition">
+            <i class="fas fa-envelope mr-2"></i>Send Email
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    
+
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-6 text-center">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Are you sure you want to delete this vehicle?</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">This action cannot be undone.</p>
+
+        <div id="deleteMessage" class="mb-4 text-sm"></div>
+        <div class="flex justify-center space-x-4">
+          <button id="cancelDelete" class="cancelBtn flex items-center">
+            <i class="fas fa-times mr-2 pointer-events-none"></i> Cancel
+          </button>
+          <button id="confirmDelete" class="deleteBtn flex items-center">
+            <i class="fas fa-trash-alt mr-2 pointer-events-none"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute top-0 right-5 z-50">
+      <%- include('partials/navigation') %>
+    </div>
+
+    <script src="/js/api.js"></script>
+  <script src="/js/Vehicle.js" defer></script>
+</body>
+</html>

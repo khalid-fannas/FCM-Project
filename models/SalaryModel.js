@@ -1,24 +1,15 @@
 const db = require("../config/db");
 
 class Salary {
-  constructor(
-    id = null,
-    employee_id,
-    base_salary,
-    total_bonuses,
-    total_deductions,
-    payment_date
-  ) {
+  constructor(id = null, employee_id, base_salary) {
     this.id = id;
     this.employee_id = employee_id;
     this.base_salary = base_salary;
-    this.total_bonuses = total_bonuses;
-    this.total_deductions = total_deductions;
-    this.payment_date = payment_date;
   }
 
   async getAll() {
-    const sql = `SELECT * FROM salaries`;
+    const sql = `SELECT * FROM salaries
+    ORDER BY created_at DESC`;
     const [rows] = await db.execute(sql);
     return rows;
   }
@@ -35,16 +26,10 @@ class Salary {
   async create() {
     const sql = `
       INSERT INTO salaries 
-      (employee_id, base_salary, total_bonuses, total_deductions, payment_date)
-      VALUES (?, ?, ?, ?, ?)
+      (employee_id, base_salary)
+      VALUES (?, ?)
     `;
-    const values = [
-      this.employee_id,
-      this.base_salary,
-      this.total_bonuses,
-      this.total_deductions,
-      this.payment_date,
-    ];
+    const values = [this.employee_id, this.base_salary];
 
     for (const value of values) {
       if (value === undefined) {
@@ -60,9 +45,6 @@ class Salary {
     const updatableFields = {
       employee_id: this.employee_id,
       base_salary: this.base_salary,
-      total_bonuses: this.total_bonuses,
-      total_deductions: this.total_deductions,
-      payment_date: this.payment_date,
     };
 
     const keys = [];

@@ -4,11 +4,16 @@ const { handleControllerError } = require("../utils/controllerErrorHandler.js");
 const {
   createViolationRecordFromData,
 } = require("../factories/violationsEmployeeRecordFactory");
+const {
+  validateActiveEmployee,
+} = require("../helper/employeeStatusChecker.js");
 
 const addLateEntry = async (req, res) => {
   try {
     const entryData = req.body;
     const lateEntry = createLateEntryFromData(entryData);
+
+    await validateActiveEmployee(entryData.employee_id);
 
     const result = await lateEntry.create();
 

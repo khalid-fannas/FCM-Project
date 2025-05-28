@@ -10,7 +10,8 @@ class User {
   }
 
   async getAll() {
-    const sql = `SELECT * FROM users`;
+    const sql = `SELECT * FROM users
+    ORDER BY created_at DESC `;
     const [rows] = await db.execute(sql);
     return rows;
   }

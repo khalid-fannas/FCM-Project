@@ -10,9 +10,26 @@ const {
   getAllEmployees,
   getEmployeeById,
   deleteEmployee,
+  getAllActiveEmployees,
 } = require("../controllers/employeeController");
 const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
+
+router.get(
+  "/management",
+  verifyToken,
+  checkRoles("hr", "admin"),
+  (req, res) => {
+    res.render("employee", { role: req.user.role });
+  }
+);
+
+router.get(
+  "/allActive",
+  verifyToken,
+  checkRoles("hr", "admin"),
+  getAllActiveEmployees
+);
 
 router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllEmployees);
 

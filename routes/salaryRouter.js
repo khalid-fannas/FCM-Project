@@ -14,6 +14,15 @@ const {
 const { verifyToken } = require("../middlewares/authMiddleware.js");
 const { checkRoles } = require("../middlewares/authorizeRoles.js");
 
+router.get(
+  "/management",
+  verifyToken,
+  checkRoles("hr , admain"),
+  (req, res) => {
+    res.render("salary");
+  }
+);
+
 router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllSalaries);
 
 router.get("/:id", verifyToken, checkRoles("hr", "admin"), getSalaryById);

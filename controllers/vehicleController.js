@@ -8,10 +8,20 @@ const sgMail = require("@sendgrid/mail");
 dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, "../.env") });
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const User = require("../models/UserModel");
+const Bonus = require("../models/BonusModel");
 
 const addVehicle = async (req, res) => {
   try {
+    const userId = req.user.id;
     const vehicleData = req.body;
+    console.log(vehicleData);
+
+    const user = new User({ id: userId });
+    const userData = await user.getById();
+
+    vehicleData.created_by = userData.employee_id;
+
     const vehicle = createVehicleFromData(vehicleData);
 
     if (vehicleData.vin_number.length !== 17) {
@@ -26,9 +36,16 @@ const addVehicle = async (req, res) => {
     }
 
     const result = await vehicle.create();
+    const vehicleId = result.insertId;
+
+    const employeeId = vehicleData.buyer_id;
+
+    const bonus = new Bonus(null, employeeId, vehicleId);
+    await bonus.create();
+
     res.status(201).json({
-      message: "Vehicle record created successfully",
-      vehicleId: result.insertId,
+      message: "Vehicle and bonus created successfully",
+      vehicleId: vehicleId,
     });
   } catch (err) {
     handleControllerError(err, res);
@@ -160,6 +177,8 @@ const generateVehiclePdf = async (req, res) => {
     };
 
     await sgMail.send(msg);
+
+    await vehicle.updateStatus("sent");
     res.status(200).json({ message: "Email with both PDFs sent successfully" });
   } catch (err) {
     handleControllerError(err, res);

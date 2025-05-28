@@ -4,6 +4,7 @@ const path = require("path");
 dotenv.config({ path: path.join(__dirname, "../.env") });
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const ViolationsEmployeeRecord = require("../models/ViolationsEmployeeRecord");
+const Employee = require("../models/EmployeeModel");
 
 async function notifyIfStatusChanged(employeeId, previousWeight) {
   try {
@@ -29,6 +30,11 @@ async function notifyIfStatusChanged(employeeId, previousWeight) {
 
     const prevStatus = getStatus(previousWeight);
     const newStatus = getStatus(currentWeight);
+
+    if (newStatus === "Termination Risk") {
+      const changeStatus = new Employee(employeeId);
+      await changeStatus.delete();
+    }
 
     if (newStatus === prevStatus || currentWeight < previousWeight) {
       return {

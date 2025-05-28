@@ -96,10 +96,22 @@ const deleteBonus = async (req, res) => {
   }
 };
 
+const getEmployeeBonus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bonus = new Bonus();
+    const totalBonus = await bonus.getMonthlyBonusForEmployee(id);
+    res.status(200).json({ id, totalBonus });
+  } catch (err) {
+    handleControllerError(err, res);
+  }
+};
+
 module.exports = {
   addBonus,
   getAllBonuses,
   getBonusById,
   updateBonus,
   deleteBonus,
+  getEmployeeBonus,
 };

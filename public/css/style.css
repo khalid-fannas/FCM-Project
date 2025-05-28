@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
 .toast {
   background: #333;
   color: white;
@@ -24,4 +30,151 @@
 .toast.fade-out {
   opacity: 0;
   transform: translateX(50%);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 3px 6px rgba(59, 130, 246, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 8rem;
+}
+
+.addBtn:hover {
+  background-color: #2563eb;
+  box-shadow: 0 5px 10px rgba(37, 99, 235, 0.7);
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 3px 6px rgba(59, 130, 246, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 8rem;
+}
+
+.submitBtn:hover {
+  background-color: #2563eb;
+  box-shadow: 0 5px 10px rgba(37, 99, 235, 0.7);
+}
+
+.emailSendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8rem;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 3px 6px rgba(26, 54, 98, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.emailSendBtn:hover {
+  background-color: #2563eb;
+  box-shadow: 0 5px 10px rgba(37, 99, 235, 0.7);
+}
+
+.emailSendBtn.sent {
+  background-color: #9ca3af;
+  box-shadow: 0 3px 6px rgba(107, 114, 128, 0.5);
+  cursor: not-allowed;
+}
+
+.editBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1fa851;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 3px 6px rgba(23, 126, 61, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 8rem;
+}
+
+.editBtn:hover {
+  background-color: #16a34a;
+  box-shadow: 0 5px 10px rgba(22, 163, 74, 0.7);
+}
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ef4444;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 4px rgba(218, 59, 59, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 8rem;
+}
+
+.deleteBtn:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 5px 10px rgba(185, 28, 28, 0.7);
+}
+
+.cancelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6b7280;
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  box-shadow: 0 3px 6px rgba(107, 114, 128, 0.5);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 8rem;
+}
+
+.cancelBtn:hover {
+  background-color: #4b5563;
+  box-shadow: 0 5px 10px rgba(75, 85, 99, 0.7);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }

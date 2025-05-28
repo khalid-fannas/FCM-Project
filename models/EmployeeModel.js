@@ -8,12 +8,10 @@ class Employee {
     email,
     phone_number,
     address,
-    personal_picture,
     department_name,
     position_name,
     shift_id,
     hire_date,
-    salary_base,
     status
   ) {
     this.id = id;
@@ -22,20 +20,28 @@ class Employee {
     this.email = email;
     this.phone_number = phone_number;
     this.address = address;
-    this.personal_picture = personal_picture;
     this.department_name = department_name;
     this.position_name = position_name;
     this.shift_id = shift_id;
     this.hire_date = hire_date;
-    this.salary_base = salary_base;
     this.status = status;
   }
 
   async getall() {
-    const sql = ` SELECT * FROM employees`;
+    const sql = `
+    SELECT * FROM employees
+    ORDER BY hire_date DESC
+  `;
     const [rows] = await db.execute(sql);
     return rows;
   }
+
+  async getallActiveEmployees() {
+    const sql = ` SELECT * FROM employees WHERE status = "active"`;
+    const [rows] = await db.execute(sql);
+    return rows;
+  }
+
   async getById() {
     const sql = `
       SELECT * FROM employees
@@ -56,8 +62,8 @@ class Employee {
   async create() {
     const sql = `
       INSERT INTO employees 
-      (first_name, last_name, email, phone_number, address, personal_picture, department_name, position_name, shift_id, hire_date, salary_base, status) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (first_name, last_name, email, phone_number, address, department_name, position_name, shift_id, hire_date, status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
       this.first_name,
@@ -65,12 +71,10 @@ class Employee {
       this.email,
       this.phone_number,
       this.address,
-      this.personal_picture,
       this.department_name,
       this.position_name,
       this.shift_id,
       this.hire_date,
-      this.salary_base,
       this.status === undefined ? (this.status = "active") : this.status,
     ];
 
@@ -91,12 +95,10 @@ class Employee {
       email: this.email,
       phone_number: this.phone_number,
       address: this.address,
-      personal_picture: this.personal_picture,
       department_name: this.department_name,
       position_name: this.position_name,
       shift_id: this.shift_id,
       hire_date: this.hire_date,
-      salary_base: this.salary_base,
       status: this.status,
     };
 
@@ -126,11 +128,22 @@ class Employee {
   }
   async delete() {
     const sql = `
-      DELETE FROM employees
-      WHERE id = ?
-    `;
+    UPDATE employees
+    SET status = 'inactive'
+    WHERE id = ?
+  `;
     const [result] = await db.execute(sql, [this.id]);
+
+    if (result.affectedRows > 0) {
+      await this.deleteRelatedData();
+    }
+
     return result;
+  }
+
+  async deleteRelatedData() {
+    await db.execute(`DELETE FROM salaries WHERE employee_id = ?`, [this.id]);
+    await db.execute(`DELETE FROM users WHERE employee_id = ?`, [this.id]);
   }
 }
 
