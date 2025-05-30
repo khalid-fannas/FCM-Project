@@ -59,6 +59,7 @@ const verifyToken = (req, res, next) => {
             });
 
             req.user = { id: refreshDecoded.id, role: refreshDecoded.role };
+            res.locals.role = refreshDecoded.role.toLowerCase();
             next();
           }
         );
@@ -68,6 +69,7 @@ const verifyToken = (req, res, next) => {
       }
     } else {
       req.user = decoded;
+      res.locals.role = decoded.role.toLowerCase();
       next();
     }
   });

@@ -16,7 +16,7 @@ loginForm.addEventListener("submit", function (e) {
       if (response.data.redirect) {
         window.location.href = response.data.redirect;
       } else {
-        window.location.href = "/dashboard";
+        window.location.href = "/api/dashboard";
       }
     })
     .catch(function (error) {

@@ -30,7 +30,7 @@ router.get(
 router.get(
   "/all",
   verifyToken,
-  checkRoles("data_entry", "admin"),
+  checkRoles("data_entry", "admin", "hr"),
   getAllVehicles
 );
 

@@ -5,7 +5,9 @@ const checkRoles = (...allowedRoles) => {
     const user = req.user;
 
     if (!user || !user.role) {
-      return res.status(401).json({ error: "Unauthorized: No role found" });
+      return res
+        .status(401)
+        .render("error", { message: "Unauthorized: No role found" });
     }
 
     const role = user.role.toLowerCase();
@@ -15,7 +17,9 @@ const checkRoles = (...allowedRoles) => {
     }
 
     if (!allowedRoles.includes(role)) {
-      return res.status(403).json({ error: "Forbidden: Access denied" });
+      return res
+        .status(403)
+        .render("error", { message: "Forbidden: Access denied" });
     }
 
     if (role === "admin" && req.body && req.body.role) {

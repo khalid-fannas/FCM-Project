@@ -1,24 +1,26 @@
-function createToastContainer() {
-  const container = document.createElement("div");
-  container.id = "toastContainer";
-  container.className = "fixed top-4 right-4 z-50 flex flex-col gap-2";
-  document.body.appendChild(container);
-  return container;
-}
-
 function showToast(message, type = "info") {
   const toastContainer =
     document.getElementById("toastContainer") || createToastContainer();
   const toast = document.createElement("div");
-  toast.className = `toast ${type} px-4 py-2 rounded shadow-md transition-all bg-${
-    type === "success" ? "green" : type === "error" ? "red" : "blue"
-  }-500 text-white`;
+  toast.className = `toast ${type}`;
   toast.innerText = message;
+
   toastContainer.appendChild(toast);
   setTimeout(() => {
-    toast.classList.add("opacity-0");
+    toast.classList.add("fade-out");
     toast.addEventListener("transitionend", () => toast.remove());
-  }, 2000);
+  }, 3000);
+}
+
+function createToastContainer() {
+  const container = document.createElement("div");
+  container.id = "toastContainer";
+  container.style.position = "fixed";
+  container.style.bottom = "20px";
+  container.style.right = "20px";
+  container.style.zIndex = "9999";
+  document.body.appendChild(container);
+  return container;
 }
 
 let shifts = [];

@@ -80,7 +80,10 @@ class User {
   }
 
   async getByEmail() {
-    const sql = `SELECT * FROM users WHERE work_email = ?`;
+    const sql = `SELECT u.*, e.status AS employee_status
+                    FROM users u
+                    JOIN employees e ON u.employee_id = e.id
+                    WHERE u.work_email = ?`;
     const [rows] = await db.execute(sql, [this.work_email]);
     return rows[0];
   }

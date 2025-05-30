@@ -18,7 +18,25 @@ class ViolationsEmployeeRecord {
   }
 
   async getAll() {
-    const sql = `SELECT * FROM violations_employees_record`;
+    const sql = `
+    SELECT 
+      ver.id,
+      CONCAT(offender.first_name, ' ', offender.last_name) AS employee_name,
+      offender.email,
+      offender.phone_number AS phone,
+      offender.department_name AS department,
+      v.title AS violation_title,
+      v.type AS violation_type,
+      v.weight AS violation_weight,
+      ver.reason,
+      ver.reason_type,
+      CONCAT(reporter.first_name, ' ', reporter.last_name) AS reported_by
+    FROM violations_employees_record ver
+    JOIN employees offender ON ver.offender_id = offender.id
+    JOIN violations v ON ver.violation_id = v.id
+    JOIN employees reporter ON ver.reported_by = reporter.id
+    ORDER BY ver.created_at DESC;
+  `;
     const [rows] = await db.execute(sql);
     return rows;
   }

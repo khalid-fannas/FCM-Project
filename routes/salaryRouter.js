@@ -17,7 +17,7 @@ const { checkRoles } = require("../middlewares/authorizeRoles.js");
 router.get(
   "/management",
   verifyToken,
-  checkRoles("hr , admain"),
+  checkRoles("hr", "admin"),
   (req, res) => {
     res.render("salary");
   }

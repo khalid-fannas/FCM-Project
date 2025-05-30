@@ -145,6 +145,11 @@ class Employee {
     await db.execute(`DELETE FROM salaries WHERE employee_id = ?`, [this.id]);
     await db.execute(`DELETE FROM users WHERE employee_id = ?`, [this.id]);
   }
+
+  async setStatus(newStatus) {
+    const sql = `UPDATE employees SET status = ? WHERE id = ?`;
+    await db.execute(sql, [newStatus, this.id]);
+  }
 }
 
 module.exports = Employee;

@@ -31,7 +31,12 @@ router.get(
   getAllActiveEmployees
 );
 
-router.get("/all", verifyToken, checkRoles("hr", "admin"), getAllEmployees);
+router.get(
+  "/all",
+  verifyToken,
+  checkRoles("hr", "admin", "data_entry"),
+  getAllEmployees
+);
 
 router.get("/:id", verifyToken, checkRoles("hr", "admin"), getEmployeeById);
 

@@ -105,24 +105,44 @@ class LateEntry {
   static async getUnlinkedLateEntries(employeeId) {
     const [rows] = await db.execute(
       `SELECT id FROM late_entries
-     WHERE employee_id = ?
-       AND excuse = 'rejected'
-       AND violation_linked = FALSE
-       AND date >= CURDATE() - INTERVAL 30 DAY
-     ORDER BY date ASC
-     LIMIT 2`,
+       WHERE employee_id = ?
+         AND excuse = 'rejected'
+         AND violation_linked = FALSE
+         AND date >= CURDATE() - INTERVAL 30 DAY
+       ORDER BY date ASC
+       LIMIT 2`,
       [employeeId]
     );
     return rows;
   }
 
-  static async markAsLinked(lateEntryIds) {
+  static async markAsLinkedWithViolation(lateEntryIds, violationRecordId) {
     if (lateEntryIds.length === 0) return;
+
     const placeholders = lateEntryIds.map(() => "?").join(",");
     await db.execute(
-      `UPDATE late_entries SET violation_linked = TRUE WHERE id IN (${placeholders})`,
-      lateEntryIds
+      `UPDATE late_entries
+       SET violation_linked = TRUE, violation_record_id = ?
+       WHERE id IN (${placeholders})`,
+      [violationRecordId, ...lateEntryIds]
     );
+  }
+
+  static async unlinkLateEntryByViolation(violationRecordId) {
+    await db.execute(
+      `UPDATE late_entries
+       SET violation_linked = FALSE, violation_record_id = NULL
+       WHERE violation_record_id = ?`,
+      [violationRecordId]
+    );
+  }
+
+  static async countRejectedLinkedLateEntriesByViolation(violationRecordId) {
+    const [rows] = await db.query(
+      "SELECT COUNT(*) AS count FROM late_entries WHERE violation_linked = 1 AND violation_record_id = ? AND excuse = 'rejected'",
+      [violationRecordId]
+    );
+    return rows[0].count;
   }
 }
 

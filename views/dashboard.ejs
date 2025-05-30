@@ -4,66 +4,34 @@
     <div class="w-full flex ">
       <div class="w-64"> <%- include('partials/sidebar') %></div>
      
-      <div class="bg-gray-50 dark:bg-gray-900 w-full p-6" >
-         <div class="flex flex-col mx-auto ">
-         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-extrabold text-gray-800 dark:text-white tracking-wide">Dashboard</h1>
-        </div>
-        <div class="grid gap-6 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 mb-6">
-            <% cards.forEach(card => { %>
-            <div class="rounded-md p-6 text-gray-800 border dark:border-gray-700
-                        bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100
-                        shadow-sm hover:shadow-md transition-transform duration-300 ease-in-out 
-                        hover:scale-105 flex flex-col items-center justify-center text-center h-64
-                        dark:from-yellow-900 dark:via-gray-800 dark:to-yellow-900 dark:text-yellow-200 dark:shadow-yellow-900/20">
-        
-                <div class="bg-gray-300 dark:bg-yellow-400 text-3xl p-5 rounded-lg w-20 h-20 flex items-center justify-center 
-                                shadow-sm dark:shadow-yellow-900/10 mb-5 text-gray-700 dark:text-gray-600">
-                    <% if(card.icon === 'faUsers') { %>
-                        <i class="fas fa-users"></i>
-                    <% } else if(card.icon === 'faMoneyBillWave') { %>
-                        <i class="fas fa-money-bill-wave"></i>
-                    <% } else if(card.icon === 'faChartLine') { %>
-                        <i class="fas fa-chart-line"></i>
-                    <% } else if(card.icon === 'faGift') { %>
-                        <i class="fas fa-gift"></i>
-                    <% } else if(card.icon === 'faCar') { %>
-                        <i class="fas fa-car"></i>
-                    <% } %>
-                </div>
-        
-                <div class="text-sm uppercase font-semibold tracking-wide drop-shadow-sm
-                            text-gray-700 dark:text-yellow-300">
-                <%= card.title %>
-                </div>
-        
-                <div class="text-3xl font-semibold mt-1 drop-shadow-sm text-gray-900 dark:text-yellow-100">
-                <%= card.value %>
-                </div>
-        
-            </div>
-            <% }) %>
-        </div>
+      <div class="bg-gray-50 dark:bg-gray-900 w-full p-6 h-screen overflow-y-auto" >
+         <div class="flex flex-col w-full mx-auto ">
+          <div class="flex justify-between items-center mb-6">
+              <h1 class="text-2xl font-extrabold text-gray-800 dark:text-white tracking-wide">Dashboard</h1>
+          </div>
+          <div id="overview" class="grid gap-6 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 mb-6">
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl font-semibold mb-4">Monthly Sales - Bar Chart</h2>
-            <canvas id="doughnutChart" height="150"></canvas>
           </div>
-    
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl font-semibold mb-4">Weekly Revenue - Line Chart</h2>
-            <canvas id="lineChart" height="150"></canvas>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h2 class="text-xl font-semibold mb-4">Vehicles Added - Last 6 Months</h2>
+              <canvas id="vehiclesLineChart" height="150"></canvas>
+            </div>
+                    
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h2 class="text-xl font-semibold mb-4">Weekly Revenue - Line Chart</h2>
+              <canvas id="lineChart" height="150"></canvas>
+            </div>
           </div>
-        </div>
       </div>
       </div>
        </div>
   </div>
       <div class="absolute top-0 right-5 z-5000">  <%- include('partials/navigation') %>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="/js/api.js"></script>
-  <script src="/js/dashboard.js"></script>
+    <script src="/js/dashboard.js"></script>
     
 </body>
 </html>

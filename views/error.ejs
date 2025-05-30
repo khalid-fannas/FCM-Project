@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center min-h-screen" x-data="LightingMode()" x-init="init()" x-cloak>
+  <div class="text-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md">
+    <h1 class="text-4xl font-bold text-red-600 mb-4">Oops! Error</h1>
+    <p class="text-lg mb-6">
+      <%= message || "We're sorry, but something went wrong on our end." %>
+    </p>
+    
+    <a href="/api/dashboard" class="deleteBtn">
+      Back to Home
+    </a>
+  </div>
+  <div class="absolute top-0 right-5 z-50">
+    <%- include('partials/navigation') %>
+  </div>
+</body>
+</html>

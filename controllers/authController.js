@@ -16,6 +16,12 @@ const logIn = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (userData.employee_status !== "active") {
+      return res
+        .status(403)
+        .json({ message: "Only Active Employee Can Access" });
+    }
+
     const isPasswordValid = await bcrypt.compare(password, userData.password);
     if (!isPasswordValid) {
       return res.status(404).json({ message: "Invalid email or password" });
@@ -57,7 +63,6 @@ const logIn = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: 16 * 60 * 1000,
     });
 
     res.cookie("refresh_token", refreshToken, {
@@ -67,7 +72,7 @@ const logIn = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("/dashboard");
+    res.redirect("/api/dashboard");
   } catch (err) {
     handleControllerError(err, res);
   }
@@ -121,7 +126,6 @@ const setNewPassword = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refresh_token", refreshToken, {
@@ -133,7 +137,7 @@ const setNewPassword = async (req, res) => {
 
     res.clearCookie("reset_token");
 
-    return res.json({ redirect: "/dashboard" });
+    return res.json({ redirect: "/api/dashboard" });
   } catch (err) {
     handleControllerError(err, res);
   }

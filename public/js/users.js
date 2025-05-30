@@ -4,6 +4,7 @@ function showToast(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.innerText = message;
+
   toastContainer.appendChild(toast);
   setTimeout(() => {
     toast.classList.add("fade-out");
@@ -15,7 +16,7 @@ function createToastContainer() {
   const container = document.createElement("div");
   container.id = "toastContainer";
   container.style.position = "fixed";
-  container.style.top = "20px";
+  container.style.bottom = "20px";
   container.style.right = "20px";
   container.style.zIndex = "9999";
   document.body.appendChild(container);

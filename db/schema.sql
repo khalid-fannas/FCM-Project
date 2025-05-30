@@ -15,12 +15,10 @@ CREATE TABLE `employees` (
   `email` varchar(255) UNIQUE NOT NULL,
   `phone_number` bigint NOT NULL,
   `address` varchar(255) NOT NULL,
-  `personal_picture` varchar(255) NOT NULL,
   `department_name` varchar(255) NOT NULL,
   `position_name` varchar(255) NOT NULL,
   `shift_id` int NOT NULL,
   `hire_date` date NOT NULL,
-  `salary_base` decimal NOT NULL,
   `status` Enum('active','inactive') NOT NULL default 'active'
 );
 
@@ -48,7 +46,7 @@ CREATE TABLE vehicles (
 
 CREATE TABLE `shifts` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL UNIQUE,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL
 );
@@ -85,7 +83,7 @@ CREATE TABLE `attendances` (
 
 CREATE TABLE `violations` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL UNIQUE,
   `description` varchar(255) NOT NULL,
   `type` Enum('verbal_warning','first_warning','final_warning','termination') NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -101,6 +99,7 @@ CREATE TABLE `violations_employees_record` (
   `violation_id` int NOT NULL,
   `reason` text,
   `reason_type` ENUM('lateness', 'manual', 'other') DEFAULT 'manual'
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE `late_entries` (
@@ -112,6 +111,7 @@ CREATE TABLE `late_entries` (
   `excuse` Enum('approved','rejected') default 'rejected',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `violation_linked` BOOLEAN DEFAULT FALSE,
+  `violation_record_id` INT DEFAULT NULL,
   `created_by` int NOT NULL,
   `updated_by` int,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

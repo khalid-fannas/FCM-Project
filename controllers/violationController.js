@@ -1,10 +1,25 @@
 const Violation = require("../models/ViolationModel");
 const { createViolationFromData } = require("../factories/violationFactory");
 const { handleControllerError } = require("../utils/controllerErrorHandler");
+const User = require("../models/UserModel");
 
 const addViolation = async (req, res) => {
   try {
     const violationData = req.body;
+    const userId = req.user.id;
+    const user = new User({ id: userId });
+    const userData = await user.getById();
+    violationData.created_by = userData.employee_id;
+
+    const title = violationData.title.trim().toLowerCase();
+
+    const existingViolation = await Violation.findByTitle(title);
+    if (existingViolation) {
+      return res.status(400).json({
+        error: "A violation with this title already exists.",
+      });
+    }
+
     const violation = createViolationFromData(violationData);
     const result = await violation.create();
 
@@ -22,11 +37,18 @@ const getAllViolations = async (req, res) => {
     const violation = new Violation();
     const violations = await violation.getAll();
 
-    if (violations.length === 0) {
-      return res.status(404).json({ message: "No violation records found" });
-    }
-
     res.status(200).json(violations);
+  } catch (err) {
+    handleControllerError(err, res);
+  }
+};
+
+const returnAllViolations = async (req, res) => {
+  try {
+    const violation = new Violation();
+    const violations = await violation.getAll();
+
+    return violations;
   } catch (err) {
     handleControllerError(err, res);
   }
@@ -62,6 +84,17 @@ const updateViolation = async (req, res) => {
       return res
         .status(404)
         .json({ error: `Violation with ID ${id} does not exist` });
+    }
+
+    if (violationData.title) {
+      const newTitle = violationData.title.trim().toLowerCase();
+      const existingViolation = await Violation.findByTitle(newTitle);
+
+      if (existingViolation && existingViolation.id != id) {
+        return res.status(400).json({
+          error: "A violation with this title already exists.",
+        });
+      }
     }
 
     const result = await violation.update();
@@ -104,4 +137,5 @@ module.exports = {
   getViolationById,
   updateViolation,
   deleteViolation,
+  returnAllViolations,
 };

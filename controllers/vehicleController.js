@@ -15,7 +15,6 @@ const addVehicle = async (req, res) => {
   try {
     const userId = req.user.id;
     const vehicleData = req.body;
-    console.log(vehicleData);
 
     const user = new User({ id: userId });
     const userData = await user.getById();

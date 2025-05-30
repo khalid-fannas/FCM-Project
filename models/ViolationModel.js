@@ -28,7 +28,7 @@ class Violation {
   }
 
   async getAll() {
-    const sql = `SELECT * FROM violations`;
+    const sql = `SELECT * FROM violations ORDER BY created_at DESC`;
     const [rows] = await db.execute(sql);
     return rows;
   }
@@ -72,6 +72,14 @@ class Violation {
     const sql = `DELETE FROM violations WHERE id = ?`;
     const [result] = await db.execute(sql, [this.id]);
     return result;
+  }
+
+  static async findByTitle(title) {
+    const [rows] = await db.query(
+      "SELECT * FROM violations WHERE LOWER(title) = ?",
+      [title]
+    );
+    return rows[0];
   }
 }
 
